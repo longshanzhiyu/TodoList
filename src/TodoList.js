@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import './style.css';
 import TodoItem from './TodoItem';
+import axios from 'axios';
 
 class TodoList extends Component {
 
@@ -33,6 +34,23 @@ class TodoList extends Component {
 				</ul>
 			</Fragment>
 		)
+	}
+
+	componentDidMount() {
+		axios.get('http://localhost.charlesproxy.com:3000/api/todolist')
+			.then((res) => { 
+				// alert('success')
+				console.log(res.data);
+				this.setState(() => ({
+					list: [...res.data]
+				}));
+				// this.setState(() => {
+				// 	return {
+				// 		list: res.data
+				// 	}
+				// });
+			})
+			.catch(() => {alert('error')})
 	}
 
 	getTodoList() {

@@ -22,4 +22,6 @@ componentWillReceiveProps()	调用条件：1.一个组件要从父组件接收�
 
 ajax一般都放在componentDidMount函数中。
 
+注意：在用Charles mock数据的时候 采用localhost.charlesproxy.com作为host
+http://localhost.charlesproxy.com:3000/ 作为网址 而且可能浏览器用过vpn 要设置浏览器的代理为自动代理。
 
