@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import './style.css';
 import TodoItem from './TodoItem';
-import Test from './Test';
+import axios from 'axios';
 
 class TodoList extends Component {
 
@@ -18,7 +18,6 @@ class TodoList extends Component {
  
 
 	render() {
-		console.log('render');
 		return (
 			<Fragment>
 				<div>
@@ -28,15 +27,30 @@ class TodoList extends Component {
 					className='input'
 					value={this.state.inputValue}
 					onChange={this.handleInputChange}
-					ref={(input) => {this.input = input}}
 					/>
 				<button onClick={this.handleBtnClick}>提交</button></div>
-				<ul ref={(ul) => {this.ul = ul}}>
+				<ul>
 					{this.getTodoList()}
 				</ul>
-				<Test content={this.state.inputValue}/>
 			</Fragment>
 		)
+	}
+
+	componentDidMount() {
+		axios.get('http://localhost.charlesproxy.com:3000/api/todolist')
+			.then((res) => { 
+				// alert('success')
+				console.log(res.data);
+				this.setState(() => ({
+					list: [...res.data]
+				}));
+				// this.setState(() => {
+				// 	return {
+				// 		list: res.data
+				// 	}
+				// });
+			})
+			.catch(() => {alert('error')})
 	}
 
 	getTodoList() {
@@ -54,8 +68,7 @@ class TodoList extends Component {
 	}
 
 	handleInputChange(e) {
-		// const value = e.target.value;
-		const value = this.input.value;
+		const value = e.target.value;
 		this.setState(() => ({
 			inputValue: value
 		}));
@@ -70,9 +83,7 @@ class TodoList extends Component {
 		this.setState((prevState) => ({
 			list:[...prevState.list, prevState.inputValue],
 			inputValue: ''
-		}), () => {
-			console.log(this.ul.querySelectorAll('div').length);
-		});
+		}));
 
 		// this.setState({
 		// 	list:[...this.state.list, this.state.inputValue],
