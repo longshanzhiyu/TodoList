@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import './style.css';
 import TodoItem from './TodoItem';
-import Test from './Test';
 
 class TodoList extends Component {
 
@@ -18,7 +17,6 @@ class TodoList extends Component {
  
 
 	render() {
-		console.log('render');
 		return (
 			<Fragment>
 				<div>
@@ -28,13 +26,11 @@ class TodoList extends Component {
 					className='input'
 					value={this.state.inputValue}
 					onChange={this.handleInputChange}
-					ref={(input) => {this.input = input}}
 					/>
 				<button onClick={this.handleBtnClick}>提交</button></div>
-				<ul ref={(ul) => {this.ul = ul}}>
+				<ul>
 					{this.getTodoList()}
 				</ul>
-				<Test content={this.state.inputValue}/>
 			</Fragment>
 		)
 	}
@@ -54,8 +50,7 @@ class TodoList extends Component {
 	}
 
 	handleInputChange(e) {
-		// const value = e.target.value;
-		const value = this.input.value;
+		const value = e.target.value;
 		this.setState(() => ({
 			inputValue: value
 		}));
@@ -70,9 +65,7 @@ class TodoList extends Component {
 		this.setState((prevState) => ({
 			list:[...prevState.list, prevState.inputValue],
 			inputValue: ''
-		}), () => {
-			console.log(this.ul.querySelectorAll('div').length);
-		});
+		}));
 
 		// this.setState({
 		// 	list:[...this.state.list, this.state.inputValue],
