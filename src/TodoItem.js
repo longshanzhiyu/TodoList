@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class TodoItem extends Component {
@@ -28,7 +28,7 @@ class TodoItem extends Component {
 
 TodoItem.propTypes = {
 	test: PropTypes.string.isRequired,
-	contents: PropTypes.string,
+	contents: PropTypes.oneOf([PropTypes.number, PropTypes.string]),
 	deleteItem: PropTypes.func,
 	index: PropTypes.number
 }
