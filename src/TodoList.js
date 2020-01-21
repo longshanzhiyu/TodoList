@@ -1,111 +1,75 @@
-import React, { Component, Fragment } from 'react';
-import './style.css';
-import TodoItem from './TodoItem';
-import axios from 'axios';
+import React, { Component } from 'react';
+import 'antd/dist/antd.css';
+import { Input, Button, List } from 'antd';
+import store from './store';
+import { getInputChangeAction, getAddItemAction, getDeleteItemAction } from './store/actionCreators';
+// import { CHANGE_INPUT_VALUE, ADD_TODO_ITEM, DELETE_TODO_ITEM } from './store/actionTypes';
 
 class TodoList extends Component {
 
-	constructor (props) {	
+	constructor(props) {
 		super(props);
-		this.state = {
-			inputValue: '',
-			list: []
-		}
+		this.state = store.getState();
+		// console.log(store.getState());
 		this.handleInputChange = this.handleInputChange.bind(this);
+		this.handleStoreChange = this.handleStoreChange.bind(this);
 		this.handleBtnClick = this.handleBtnClick.bind(this);
-		this.handleItemDelete = this.handleItemDelete.bind(this);
+		store.subscribe(this.handleStoreChange);
 	}
- 
 
 	render() {
 		return (
-			<Fragment>
+			<div style={{marginLeft: '10px', marginTop: '10px'}}>
 				<div>
-				<label htmlFor="insertArea">输入内容</label>
-				<input 
-					id="insertArea"
-					className='input'
-					value={this.state.inputValue}
-					onChange={this.handleInputChange}
+					<Input 
+						value={this.state.inputValue} 
+						placeholder='todo info' 
+						style={{width: '300px', marginRight: '10px'}}
+						onChange={this.handleInputChange}
 					/>
-				<button onClick={this.handleBtnClick}>提交</button></div>
-				<ul>
-					{this.getTodoList()}
-				</ul>
-			</Fragment>
+					<Button 
+						type="primary"
+						onClick={this.handleBtnClick}
+					>提交</Button>
+					<List
+						style = {{marginTop: '10px', width: '300px'}}
+      					bordered
+      					dataSource={this.state.list}
+      					renderItem={(item, index) => <List.Item onClick={this.handleItemDelete.bind(this, index)}>{item}</List.Item>}
+    				/>
+				</div>
+			</div>
 		)
 	}
 
-	componentDidMount() {
-		axios.get('http://localhost.charlesproxy.com:3000/api/todolist')
-			.then((res) => { 
-				// alert('success')
-				console.log(res.data);
-				this.setState(() => ({
-					list: [...res.data]
-				}));
-				// this.setState(() => {
-				// 	return {
-				// 		list: res.data
-				// 	}
-				// });
-			})
-			.catch(() => {alert('error')})
-	}
-
-	getTodoList() {
-		return this.state.list.map((item, index) => {
-					return (
-						<TodoItem  
-							key = {item}
-							content={item} 
-							index={index}
-							deleteItem={this.handleItemDelete}
-						/>
-						// {/*<li key={index} onClick={this.handleItemDelete.bind(this, index)} dangerouslySetInnerHTML={{__html: item}}></li>*/}
-					)
-				})
-	}
-
-	handleInputChange(e) {
-		const value = e.target.value;
-		this.setState(() => ({
-			inputValue: value
-		}));
-
-		// this.setState({
-		// 	inputValue: e.target.value
-		// })
+	handleStoreChange(){
+		this.setState(store.getState());
 	}
 
 	handleBtnClick() {
+		// const action = {
+		// 	type: ADD_TODO_ITEM
+		// };
+		const action = getAddItemAction();
+		store.dispatch(action);
+	}
 
-		this.setState((prevState) => ({
-			list:[...prevState.list, prevState.inputValue],
-			inputValue: ''
-		}));
-
-		// this.setState({
-		// 	list:[...this.state.list, this.state.inputValue],
-		// 	inputValue: ''
-		// })
+	handleInputChange(e) {
+		// const action = {
+		// 	type: CHANGE_INPUT_VALUE,
+		// 	value: e.target.value
+		// };
+		const action = getInputChangeAction(e.target.value);
+		store.dispatch(action);
 	}
 
 	handleItemDelete(index) {
-		// console.log(index);
-		// immutable
-		// state不允许我们做任何的变化 所以不允许 this.setState({list:this.state.list.splice(index, 1)}) 这样写
-		// const list = [...this.state.list];
-		// list.splice(index, 1);
-
-		this.setState((prevState) => {
-			const list = [...prevState.list];
-			list.splice(index, 1);
-			return {list};
-		});
-		// this.setState({
-		// 	list: list
-		// })
+		// const action = {
+		// 	type: DELETE_TODO_ITEM,
+		// 	index
+		// };
+		const action = getDeleteItemAction(index);
+		store.dispatch(action);
 	}
 }
 
