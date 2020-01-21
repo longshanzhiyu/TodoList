@@ -5,6 +5,7 @@ const defaultState = {
 	list: []
 }
 
+//纯函数， 给定固定的输入，就一定会有固定的输出，而且不会有副作用
 export default (state = defaultState, action) => {
 
 	if (action.type === CHANGE_INPUT_VALUE) {
