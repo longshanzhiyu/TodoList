@@ -1,28 +1,24 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 
-class TodoList extends Component {
+const TodoList = (props) => {
+	const {inputValue, changeInputValue, handleClick, list } = props;
 
-	render() {
-
-		const {inputValue, changeInputValue, handleClick, list } = this.props;
-
-		return (
+	return (
+		<div>
 			<div>
-				<div>
-					<input value={inputValue} onChange={changeInputValue}/>
-					<button onClick={handleClick}>提交</button>
-				</div>
-				<ul> 
-					{
-						list.map((item, index) => {
-							return <li key={index}>{item}</li>
-						})
-					}
-				</ul>
+				<input value={inputValue} onChange={changeInputValue}/>
+				<button onClick={handleClick}>提交</button>
 			</div>
-		)
-	}
+			<ul> 
+				{
+					list.map((item, index) => {
+						return <li key={index}>{item}</li>
+					})
+				}
+			</ul>
+		</div>
+	)
 }
 
 const mapStateToProps = (state) => {
